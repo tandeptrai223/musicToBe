@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YouTube Music Player</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="main-bg"></div>
+  <div class="chart-fixed">
+    <div class="chart-title-bar">🔥 Top Thịnh Hành</div>
+    <div id="chart-list-scroll">
+      <div id="chart-list">...nội dung bài hát...</div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="player-card" id="player-card">
+      <div class="track-title-row">
+        <div class="track-thumb-small" id="track-thumb-small"></div>
+        <div>
+          <div class="track-author" id="track-author">Tác giả</div>
+          <div class="track-title" id="track-title">Tên bài hát</div>
+        </div>
+      </div>
+      <div class="disc-zone">
+        <img id="music-disc" class="music-disc" src="" alt="music disc">
+      </div>
+      <div class="controls">
+        <button id="btn-repeat" title="Lặp lại"><span>⟲</span></button>
+        <button id="btn-prev" title="Bài trước"><span>⏮</span></button>
+        <button id="btn-play" title="Phát/Tạm dừng"><span>▶</span></button>
+        <button id="btn-next" title="Bài tiếp"><span>⏭</span></button>
+        <button id="btn-shuffle" title="Xáo trộn"><span>⇻</span></button>
+      </div>
+      <div class="progress-bar-wrap">
+        <span id="current-time">0:00</span>
+        <input type="range" id="progress-bar" min="0" max="100" value="0" step="0.01">
+        <span id="duration">0:00</span>
+      </div>
+      <span id="volume">🔊</span>
+      <input type="range" id="player-volume" min="0" max="100" value="100">
+      <div id="yt-audio"></div>
+    </div>
+    <form class="search-form" id="search-form">
+      <input id="search-input" type="text" placeholder="Nhập tên bài hát hoặc nghệ sĩ...">
+      <button type="submit">🔎</button>
+    </form>
+    <div id="search-results"></div>
+  </div>
+  <!-- Playlist cố định góc phải -->
+  <div class="playlist-fixed" id="playlist">
+    <div class="playlist-title-bar">🎵 Playlist của bạn</div>
+    <div id="play-list-scroll">
+
+    </div>
+  </div>
+  <script src="main.js"></script>
+</body>
+</html>
