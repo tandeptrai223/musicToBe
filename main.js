@@ -57,7 +57,6 @@ let userSeeking = false;
 let transparentModeOn = false; 
 
 const chartFixed = document.querySelector('.chart-fixed');
-
 // Toggle button như trước
 const toggleBtn = document.getElementById('toggle-transparent-btn');
 
@@ -74,6 +73,11 @@ toggleBtn.addEventListener('click', function() {
   if(chartPopupBtn) chartPopupBtn.classList.toggle('transparent-bg');
   if(playlistPopupBtn) playlistPopupBtn.classList.toggle('transparent-bg');
   if(searchInput) searchInput.classList.toggle('transparent-bg');
+  if(btnRepeat) btnRepeat.classList.toggle('transparent-bg');
+  if(btnPrev) btnPrev.classList.toggle('transparent-bg');
+  if(btnPlay) btnPlay.classList.toggle('transparent-bg');
+  if(btnNext) btnNext.classList.toggle('transparent-bg');
+  if(btnShuffle) btnShuffle.classList.toggle('transparent-bg');
 
   // Chart items
   const chartItems = document.querySelectorAll('.chart-item');
