@@ -520,3 +520,18 @@ searchClear.addEventListener('click', function() {
   searchInput.focus();
 });
 
+
+const logo = document.getElementById('logo-top-left');
+const aboutPopup = document.getElementById('about-popup');
+const aboutPopupClose = document.getElementById('about-popup-close');
+
+logo.onclick = function() {
+  aboutPopup.style.display = 'flex';
+};
+aboutPopupClose.onclick = function() {
+  aboutPopup.style.display = 'none';
+};
+// Đóng popup khi click ra ngoài nội dung
+aboutPopup.addEventListener('mousedown', function(e) {
+  if (e.target === aboutPopup) aboutPopup.style.display = 'none';
+});
