@@ -9,6 +9,7 @@ let ytPlayer;
 let ytReady = false;
 let volume = 70;
 
+
 // Danh sách ảnh đĩa nhạc, thêm đường dẫn các ảnh đĩa bạn muốn
 const discImages = [
   '/assets/img/1.png',
@@ -44,6 +45,51 @@ const durationEl = document.getElementById("duration");
 
 let progressInterval = null;
 let userSeeking = false;
+
+
+
+// Lấy các thành phần cần chuyển trong suốt
+let transparentModeOn = false; 
+
+const chartFixed = document.querySelector('.chart-fixed');
+
+// Toggle button như trước
+const toggleBtn = document.getElementById('toggle-transparent-btn');
+
+toggleBtn.addEventListener('click', function() {
+  transparentModeOn = !transparentModeOn;
+  toggleBtn.classList.toggle('active');
+  // Toggle player
+  playerCard.classList.toggle('transparent-bg');
+  // Toggle các thành phần khác nếu có
+  if(chartFixed) chartFixed.classList.toggle('transparent-bg');
+  if(chartPopup) chartPopup.classList.toggle('transparent-bg');
+  if(playlistPopup) playlistPopup.classList.toggle('transparent-bg');
+  if(searchResults) searchResults.classList.toggle('transparent-bg');
+  if(chartPopupBtn) chartPopupBtn.classList.toggle('transparent-bg');
+  if(playlistPopupBtn) playlistPopupBtn.classList.toggle('transparent-bg');
+  if(searchInput) searchInput.classList.toggle('transparent-bg');
+
+  // Chart items
+  const chartItems = document.querySelectorAll('.chart-item');
+  chartItems.forEach(item => item.classList.toggle('transparent-bg'));
+  const searchItems = document.querySelectorAll('.song-search-item');
+  searchItems.forEach(item => item.classList.toggle('transparent-bg'));
+  // Render lại playlist để cập nhật class (vì các playlist-track có thể render lại)
+  renderPlaylist();
+});
+
+function updatePlaylistTransparent() {
+  const playlistItems = document.querySelectorAll('.playlist-item'); // đổi theo class item thực tế
+  playlistItems.forEach(item => {
+    if (transparentModeOn) {
+      item.classList.add('transparent-bg');
+    } else {
+      item.classList.remove('transparent-bg');
+    }
+  });
+}
+
 
 // Render player info
 function renderPlayer() {
@@ -97,6 +143,8 @@ function renderPlaylist() {
       </div>
       <button class="playlist-menu" onclick="removeFromPlaylist(event,${idx})">❌</button>
     `;
+    // Thêm class trong suốt nếu đang bật transparent
+    if (transparentModeOn) div.classList.add('transparent-bg');
     playlistDiv.appendChild(div);
   });
 }
@@ -133,7 +181,7 @@ searchForm.addEventListener("submit", async function (e) {
           <div class="song-search-title">${item.snippet.title}</div>
           <div class="song-search-channel">${item.snippet.channelTitle}</div>
         </div>
-        <button>Thêm</button>
+        <button>✚</button>
       `;
       div.querySelector("button").onclick = (ev) => {
         ev.stopPropagation();
@@ -157,6 +205,13 @@ function addToPlaylist(song) {
   if (playlist.length === 1) {
     currentIndex = 0;
     playCurrent();
+  }
+    // Tự động bật popup playlist
+  const playlistPopup = document.getElementById('playlist-popup');
+  const playlistPopupBtn = document.getElementById('playlist-popup-btn');
+  if (playlistPopup && playlistPopupBtn) {
+    playlistPopup.style.display = 'flex';
+    playlistPopupBtn.style.display = 'none';
   }
 }
 
@@ -399,3 +454,69 @@ async function loadChart() {
   }
 }
 loadChart();
+
+
+// Ẩn bảng BXH cũ trên layout nếu có (không cần nếu đã bỏ khỏi HTML)
+const chartPopupBtn = document.getElementById('chart-popup-btn');
+const chartPopup = document.getElementById('chart-popup');
+const chartPopupClose = document.getElementById('chart-popup-close');
+
+chartPopupBtn.onclick = function() {
+  chartPopup.style.display = 'flex';
+  chartPopupBtn.style.display = 'none';
+};
+chartPopupClose.onclick = function() {
+  chartPopup.style.display = 'none';
+  chartPopupBtn.style.display = 'flex';
+};
+// Đóng popup nếu click ra ngoài
+chartPopup.addEventListener('mousedown', function(e) {
+  if(e.target === chartPopup) {
+    chartPopup.style.display = 'none';
+    chartPopupBtn.style.display = 'flex';
+  }
+});
+
+// Khi load lần đầu, chỉ hiện nút, ẩn popup
+chartPopup.style.display = 'none';
+chartPopupBtn.style.display = 'flex';
+
+
+// Popup Playlist
+const playlistPopupBtn = document.getElementById('playlist-popup-btn');
+const playlistPopup = document.getElementById('playlist-popup');
+const playlistPopupClose = document.getElementById('playlist-popup-close');
+
+playlistPopupBtn.onclick = function() {
+  playlistPopup.style.display = 'flex';
+  playlistPopupBtn.style.display = 'none';
+};
+playlistPopupClose.onclick = function() {
+  playlistPopup.style.display = 'none';
+  playlistPopupBtn.style.display = 'flex';
+};
+// Đóng popup nếu click ra ngoài (nếu muốn)
+playlistPopup.addEventListener('mousedown', function(e) {
+  if(e.target === playlistPopup) {
+    playlistPopup.style.display = 'none';
+    playlistPopupBtn.style.display = 'flex';
+  }
+});
+
+// Khi load lần đầu, chỉ hiện nút, ẩn popup
+playlistPopup.style.display = 'none';
+playlistPopupBtn.style.display = 'flex';
+
+
+const searchClear = document.getElementById('search-clear');
+
+searchInput.addEventListener('input', function() {
+  searchClear.style.display = this.value.trim() ? 'block' : 'none';
+});
+searchClear.addEventListener('click', function() {
+  searchInput.value = '';
+  searchClear.style.display = 'none';
+  if (searchResults) searchResults.innerHTML = '';
+  searchInput.focus();
+});
+

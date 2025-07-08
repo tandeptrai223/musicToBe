@@ -201,7 +201,6 @@ body {
 .playlist-track.active {
   background: #e53935;
   color: #fff;
-  border-left: 6px solid #fff;
   box-shadow: 0 4px 16px rgba(229,57,53,0.19);
 }
 .playlist-thumb img {
@@ -599,4 +598,304 @@ L
   .track-author {
     font-size: 0.9rem;
   }
+}
+
+
+.chart-fixed {
+  margin: 0;
+}
+
+
+.chart-popup-btn {
+  position: fixed;
+  bottom: 22px;
+  left: 22px;
+  background: #fff;
+  color: #e53935;
+  border-radius: 22px;
+  box-shadow: 0 2px 12px rgba(229,57,53,0.12);
+  padding: 10px 22px 10px 17px;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  z-index: 1200;
+  gap: 8px;
+  transition: box-shadow 0.15s, background 0.15s;
+}
+.chart-popup-btn:hover {
+  background: #ffeaea;
+  box-shadow: 0 3px 18px rgba(229,57,53,0.18);
+}
+.chart-popup {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  width: 320px;
+  max-width: 94vw;
+  max-height: 75vh;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(229,57,53,0.17);
+  display: none;
+  flex-direction: column;
+  z-index: 1300;
+  animation: chartPopIn 0.21s;
+}
+@keyframes chartPopIn {
+  0% {transform: scale(0.93) translateY(25px); opacity: 0.2;}
+  100% {transform: scale(1) translateY(0); opacity: 1;}
+}
+.chart-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.16rem;
+  font-weight: 600;
+  color: #e53935;
+  border-bottom: 1px solid #f2cfcf;
+  padding: 13px 18px 10px 18px;
+}
+#chart-popup-close {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 1.7em;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: color 0.13s, opacity 0.13s;
+}
+#chart-popup-close:hover {
+  color: #e53935;
+  opacity: 1;
+}
+.chart-popup-list {
+  padding: 8px 14px 12px 14px;
+  overflow-y: auto;
+  max-height: 54vh;
+}
+@media (max-width: 600px) {
+  .chart-popup, .chart-popup-btn {
+    left: 7px;
+    bottom: 7px;
+    width: 97vw;
+    max-width: 97vw;
+  }
+}
+
+
+
+.playlist-popup-btn {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  background: #fff;
+  color: #7e2ad6;
+  border-radius: 22px;
+  box-shadow: 0 2px 12px rgba(126,42,214,0.12);
+  padding: 10px 22px 10px 17px;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  z-index: 1200;
+  gap: 8px;
+  transition: box-shadow 0.15s, background 0.15s;
+}
+.playlist-popup-btn:hover {
+  background: #f4f0ff;
+  box-shadow: 0 3px 18px rgba(126,42,214,0.18);
+}
+.playlist-popup {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 320px;
+  max-width: 94vw;
+  max-height: 75vh;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(126,42,214,0.17);
+  display: none;
+  flex-direction: column;
+  z-index: 1300;
+  animation: playlistPopIn 0.21s;
+}
+@keyframes playlistPopIn {
+  0% {transform: scale(0.93) translateY(25px); opacity: 0.2;}
+  100% {transform: scale(1) translateY(0); opacity: 1;}
+}
+.playlist-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.16rem;
+  font-weight: 600;
+  color: #7e2ad6;
+  border-bottom: 1px solid #e5daf7;
+  padding: 13px 18px 10px 18px;
+}
+#playlist-popup-close {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 1.7em;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: color 0.13s, opacity 0.13s;
+}
+#playlist-popup-close:hover {
+  color: #7e2ad6;
+  opacity: 1;
+}
+.playlist-popup-list {
+  padding: 8px 14px 12px 14px;
+  overflow-y: auto;
+  max-height: 54vh;
+}
+@media (max-width: 600px) {
+  .playlist-popup, .playlist-popup-btn {
+    right: 7px;
+    bottom: 7px;
+    width: 97vw;
+    max-width: 97vw;
+  }
+}
+
+
+
+/* Thêm vào (hoặc cập nhật) cho phần tiêu đề bài hát trong playlist, chart, search */
+
+.playlist-title,
+.chart-title,
+.song-search-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;    /* Số dòng tối đa */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;      /* Để text xuống dòng */
+  max-height: 2.7em;        /* Giới hạn chiều cao cho 2 dòng, tùy font-size */
+  line-height: 1.35em;      /* Nên để line-height đồng nhất */
+}
+
+/* Nếu có phần tiêu đề chính của player */
+.track-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  max-height: 2.7em;
+  line-height: 1.35em;
+}
+
+
+/* Thanh search - căn chỉnh nút X vào bên trong input */
+.search-form {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+#search-input {
+  flex: 1 1 auto;
+  padding-right: 62px; /* Đủ chỗ cho nút X và nút search */
+  height: 40px;
+  border-radius: 8px;
+  border: 1.5px solid #e53935;
+  font-size: 1.07rem;
+  background: #fff;
+  outline: none;
+  box-sizing: border-box;
+  padding-left: 13px;
+}
+
+#search-clear {
+  position: absolute;
+  right: 46px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 1.5em;
+  cursor: pointer;
+  opacity: 0.65;
+  z-index: 1;
+  transition: color 0.15s, opacity 0.15s;
+  padding: 0;
+  line-height: 1;
+  display: none; /* đã có inline ở html, giữ nguyên */
+}
+#search-clear:hover {
+  color: #e53935;
+  opacity: 1;
+}
+
+#search-form button[type="submit"] {
+  position: absolute;
+  right: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 0 8px 8px 0;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.18em;
+}
+
+
+/* Nút cần gạt nhỏ góc phải */
+.toggle-transparent-btn {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  width: 48px;
+  height: 26px;
+  background: #e0e0e0;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.18s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.09);
+}
+.toggle-transparent-btn.active {
+  background: #b39ddb;
+}
+#toggle-transparent-knob {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  margin-left: 2px;
+  transition: margin-left 0.18s, background 0.18s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+}
+.toggle-transparent-btn.active #toggle-transparent-knob {
+  margin-left: 24px;
+  background: #7e2ad6;
+}
+
+
+/* Class dùng chung cho mọi thành phần chuyển trong suốt */
+.transparent-bg {
+  background: rgba(255,255,255,0.14) !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(8px) saturate(120%);
+  border: 1.5px solid rgba(255,255,255,0.13);
+  transition: background 0.22s, box-shadow 0.22s, border 0.22s;
 }

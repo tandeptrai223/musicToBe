@@ -8,18 +8,45 @@
 </head>
 <body>
   <div class="main-bg"></div>
-  <div class="chart-fixed">
+  <!-- <div class="chart-fixed">
     <div class="chart-title-bar">🔥 Top Thịnh Hành</div>
     <div id="chart-list-scroll">
       <div id="chart-list">...nội dung bài hát...</div>
     </div>
+  </div> -->
+
+  <div class="toggle-transparent-btn" id="toggle-transparent-btn" title="Bật/tắt nền trong suốt">
+    <span id="toggle-transparent-knob"></span>
   </div>
+
+<!-- Nút mở popup BXH -->
+<div id="chart-popup-btn" class="chart-popup-btn  ">
+  &#128165
+  <span>Top Thịnh Hành</span>
+</div>
+
+<!-- Popup BXH -->
+<div id="chart-popup" class="chart-popup ">
+  <div class="chart-popup-header">
+    <span>&#128165 Top Thịnh Hành</span>
+    <button id="chart-popup-close" aria-label="Đóng BXH">&times;</button>
+  </div>
+  <div id="chart-list" class="chart-popup-list"></div>
+</div>
+
   <div class="container">
+
+    <form class="search-form " id="search-form">
+      <input id="search-input" type="text" placeholder="Nhập tên bài hát hoặc nghệ sĩ...">
+      <button id="search-clear" type="button" style="display:none;" aria-label="Xóa ô tìm kiếm">&times;</button>
+      <button type="submit">🔎</button>
+    </form>
+
     <div class="player-card" id="player-card">
+      <div class="track-author" id="track-author">Tác giả</div>
       <div class="track-title-row">
         <div class="track-thumb-small" id="track-thumb-small"></div>
         <div>
-          <div class="track-author" id="track-author">Tác giả</div>
           <div class="track-title" id="track-title">Tên bài hát</div>
         </div>
       </div>
@@ -42,18 +69,23 @@
       <input type="range" id="player-volume" min="0" max="100" value="100">
       <div id="yt-audio"></div>
     </div>
-    <form class="search-form" id="search-form">
-      <input id="search-input" type="text" placeholder="Nhập tên bài hát hoặc nghệ sĩ...">
-      <button type="submit">🔎</button>
-    </form>
-    <div id="search-results"></div>
+
+    <div id="search-results" class="search-results "></div>
   </div>
   <!-- Playlist cố định góc phải -->
-  <div class="playlist-fixed" id="playlist">
-    <div class="playlist-title-bar">🎵 Playlist của bạn</div>
-    <div id="play-list-scroll">
+<!-- Nút mở popup Playlist -->
+<div id="playlist-popup-btn" class="playlist-popup-btn ">
+  &#127925
+  <span>Playlist của bạn</span>
+</div>
 
+<!-- Popup Playlist -->
+  <div id="playlist-popup" class="playlist-popup ">
+    <div class="playlist-popup-header">
+      <span>&#127925 Playlist của bạn</span>
+      <button id="playlist-popup-close" aria-label="Đóng Playlist">&times;</button>
     </div>
+    <div id="play-list-scroll" class="playlist-popup-list"></div>
   </div>
   <script src="main.js"></script>
 </body>
