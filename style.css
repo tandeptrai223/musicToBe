@@ -485,3 +485,118 @@ L
 @keyframes spin-disc {
   100% { transform: rotate(360deg);}
 }
+
+
+
+/* ======= Base styles (desktop) ======= */
+.player-card, .chart-fixed {
+  max-width: 400px;
+  margin: 32px auto;
+  padding: 24px 32px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 4px 18px rgba(229,57,53,0.13);
+}
+
+/* ...Các style mặc định khác... */
+
+/* ======= Tablet (<= 900px) ======= */
+@media (max-width: 900px) {
+  .player-card, .chart-fixed {
+    max-width: 90vw;
+    margin: 18px auto;
+    padding: 16px 10px;
+  }
+  .track-title-row {
+    gap: 10px;
+  }
+  .music-disc {
+    width: 90px;
+    height: 90px;
+  }
+  .playlist-track .playlist-thumb img,
+  .track-thumb-small img {
+    width: 39px;
+    height: 39px;
+  }
+}
+
+/* ======= Mobile (<= 600px) ======= */
+@media (max-width: 600px) {
+  .player-card, .chart-fixed {
+    max-width: 98vw;
+    margin: 8px auto;
+    padding: 6px 3vw;
+    border-radius: 12px;
+  }
+  .track-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    text-align: left;
+  }
+  .track-thumb-small img {
+    width: 35px;
+    height: 35px;
+    margin-bottom: 3px;
+  }
+  .music-disc {
+    width: 62vw;
+    height: 62vw;
+    max-width: 180px;
+    max-height: 180px;
+  }
+  .playlist-track {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 7px 0;
+  }
+  .playlist-info {
+    font-size: 0.95rem;
+  }
+  .playlist-thumb img {
+    width: 33px;
+    height: 33px;
+  }
+  .chart-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 7px;
+    padding: 8px 0;
+  }
+  .chart-thumb img {
+    width: 38px;
+    height: 38px;
+  }
+  .btn, button, .btn-round {
+    font-size: 1.1rem;
+    min-width: 36px;
+    min-height: 36px;
+    padding: 0.1em 0.7em;
+  }
+  .progress-bar,
+  #progress-bar {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* ======= Small Mobile (<= 400px) ======= */
+@media (max-width: 400px) {
+  .player-card, .chart-fixed {
+    padding: 2px 1vw;
+  }
+  .music-disc {
+    width: 47vw;
+    height: 47vw;
+    min-width: 65px;
+    min-height: 65px;
+  }
+  .track-title {
+    font-size: 1.05rem;
+  }
+  .track-author {
+    font-size: 0.9rem;
+  }
+}
