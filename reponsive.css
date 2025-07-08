@@ -1,0 +1,275 @@
+/* ==== RESET & BASE ==== */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Arial, Tahoma, Geneva, Verdana, sans-serif;
+  background: #191c22;
+  color: #222;
+  font-size: 16px;
+  overflow-x: hidden;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+button {
+  font: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  outline: none;
+}
+input, textarea {
+  font: inherit;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+}
+
+/* ==== LOGO & TOGGLE BUTTON ==== */
+#logo-top-left {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  width: 48px;
+  height: 48px;
+  z-index: 100;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  background: rgba(255,255,255,0.75);
+  padding: 4px;
+  transition: opacity .18s;
+  cursor: pointer;
+}
+#toggle-transparent-btn {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  z-index: 100;
+  border-radius: 10px;
+  background: rgba(230,230,230,0.85);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  transition: background .2s;
+  cursor: pointer;
+}
+#toggle-transparent-btn.active {
+  background: #92b7f5;
+}
+
+/* ==== PLAYER CARD ==== */
+#player-card {
+  position: relative;
+  margin: 72px auto 0 auto;
+  max-width: 420px;
+  width: 96vw;
+  min-height: 320px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.13);
+  padding: 26px 34px 24px 34px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.transparent-bg {
+  background: rgba(255,255,255,0.12) !important;
+  backdrop-filter: blur(8px);
+  box-shadow: none !important;
+}
+
+/* ==== PLAYLIST POPUP ==== */
+#playlist-popup {
+  position: fixed;
+  top: 60px;
+  right: 30px;
+  width: 340px;
+  max-width: 95vw;
+  min-width: 260px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.16);
+  z-index: 99;
+  padding: 12px 0 2px 0;
+  display: none;
+  flex-direction: column;
+}
+
+/* ==== CHART POPUP ==== */
+#chart-popup {
+  position: fixed;
+  top: 60px;
+  left: 30px;
+  width: 340px;
+  max-width: 96vw;
+  min-width: 260px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.16);
+  z-index: 99;
+  padding: 12px 0 2px 0;
+  display: none;
+  flex-direction: column;
+}
+
+/* ==== PLAYLIST & CHART ITEMS ==== */
+.playlist-track, .chart-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 14px;
+  font-size: 16px;
+  border-bottom: 1px solid #ececec;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.16s;
+}
+.playlist-track:last-child, .chart-item:last-child {
+  border-bottom: none;
+}
+.playlist-track.active {
+  background: #f8b9b9;
+  font-weight: bold;
+}
+.playlist-thumb img, .chart-thumb img {
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
+  margin-right: 12px;
+}
+.playlist-menu {
+  margin-left: auto;
+  color: #e53935;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* ==== SEARCH ==== */
+#search-form {
+  width: 100%;
+  margin: 10px 0 20px 0;
+  display: flex;
+}
+#search-input {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 16px;
+}
+
+/* ==== POPUP ABOUT ==== */
+#about-popup {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.32);
+  justify-content: center;
+  align-items: center;
+}
+.about-popup-content {
+  background: #fff;
+  border-radius: 14px;
+  padding: 28px 32px;
+  min-width: 320px;
+  max-width: 94vw;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.16);
+  position: relative;
+  text-align: center;
+  animation: popupAppear 0.19s cubic-bezier(.4,2,.6,1) both;
+}
+.about-popup-close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  font-size: 24px;
+  color: #888;
+  cursor: pointer;
+}
+@keyframes popupAppear {
+  0% { transform: translateY(-40px) scale(.94); opacity: 0; }
+  100% { transform: none; opacity: 1; }
+}
+
+/* ==== MEDIA QUERIES ==== */
+
+/* Tablet: dưới 1024px */
+@media (max-width: 1024px) {
+  #player-card, #playlist-popup, #chart-popup {
+    max-width: 98vw;
+    width: 95vw;
+    left: 1vw;
+    right: 1vw;
+    padding: 18px 12px 12px 12px;
+    border-radius: 14px;
+  }
+  .about-popup-content {
+    min-width: 220px;
+    padding: 18px 10vw;
+  }
+  #logo-top-left, #toggle-transparent-btn {
+    top: 16px;
+    left: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+  }
+  .playlist-thumb img, .chart-thumb img {
+    width: 40px;
+    height: 40px;
+  }
+  .playlist-track, .chart-item {
+    font-size: 15px;
+    padding: 10px 7px;
+  }
+}
+
+/* Mobile: dưới 600px */
+@media (max-width: 600px) {
+  #player-card, #playlist-popup, #chart-popup {
+    width: 99vw;
+    max-width: 100vw;
+    left: 0;
+    right: 0;
+    top: 6vw;
+    border-radius: 8px;
+    padding: 10px 2vw 8px 2vw;
+    min-width: 0;
+  }
+  .about-popup-content {
+    min-width: 0;
+    width: 93vw;
+    padding: 14px 4vw;
+  }
+  #logo-top-left, #toggle-transparent-btn {
+    top: 6px;
+    left: 6px;
+    right: 6px;
+    width: 32px;
+    height: 32px;
+    padding: 2px;
+    border-radius: 6px;
+  }
+  .playlist-thumb img, .chart-thumb img {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    margin-right: 7px;
+  }
+  .playlist-track, .chart-item {
+    font-size: 14px;
+    padding: 6px 2px;
+  }
+  .playlist-menu {
+    font-size: 18px;
+  }
+}
+
+/* Ẩn thành phần lớn, không cần thiết trên mobile nếu muốn */
+@media (max-width: 600px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
