@@ -99,14 +99,31 @@ function updatePlaylistTransparent() {
   });
 }
 
+let autoNextSimilar = false;
+
+const autoNextBox = document.getElementById('auto-next-similar');
+autoNextBox.addEventListener('change', function() {
+  autoNextSimilar = autoNextBox.checked;
+});
+
+// Hàm lấy bài tương tự theo ca sĩ và thể loại (nếu có)
 async function playSimilarSong() {
-  const lastSong = playlist[playlist.length-1];
+  const lastSong = playlist[playlist.length - 1];
   if (!lastSong) return;
 
+  // Lấy ca sĩ (channel) và thể loại (nếu có)
+  let keyword = lastSong.channel;
+  if (lastSong.category) {
+    keyword += ' ' + lastSong.category;
+  } else if (lastSong.genre) {
+    keyword += ' ' + lastSong.genre;
+  }
+  // Nếu không có thể loại, chỉ tìm với ca sĩ
+  keyword += ' music'; // tăng độ chính xác
+
   try {
-    // Gọi API search với từ khóa là tiêu đề bài hát cuối
     const res = await fetch(
-      `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=10&relatedToVideoId=${lastSong.id}&key=${API_KEY}`
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=10&q=${encodeURIComponent(keyword)}&key=${API_KEY}`
     );
     const data = await res.json();
 
@@ -603,9 +620,3 @@ aboutPopup.addEventListener('mousedown', function(e) {
   if (e.target === aboutPopup) aboutPopup.style.display = 'none';
 });
 
-let autoNextSimilar = false;
-
-const autoNextBox = document.getElementById('auto-next-similar');
-autoNextBox.addEventListener('change', function() {
-  autoNextSimilar = autoNextBox.checked;
-});
