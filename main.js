@@ -99,6 +99,39 @@ function updatePlaylistTransparent() {
   });
 }
 
+async function playSimilarSong() {
+  const lastSong = playlist[playlist.length-1];
+  if (!lastSong) return;
+
+  try {
+    // Gọi API search với từ khóa là tiêu đề bài hát cuối
+    const res = await fetch(
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=10&relatedToVideoId=${lastSong.id}&key=${API_KEY}`
+    );
+    const data = await res.json();
+
+    // Lọc bài không trùng với playlist hiện tại
+    const existIds = playlist.map(song => song.id);
+    const similarSong = data.items.find(i => !existIds.includes(i.id.videoId));
+
+    if (similarSong) {
+      const song = {
+        id: similarSong.id.videoId,
+        title: similarSong.snippet.title,
+        channel: similarSong.snippet.channelTitle,
+        thumb: similarSong.snippet.thumbnails.medium.url
+      };
+      playlist.push(song);
+      currentIndex = playlist.length - 1;
+      playCurrent();
+    } else {
+      alert('Không tìm thấy bài tương tự!');
+    }
+  } catch (err) {
+    alert('Lỗi khi tìm bài tương tự!');
+  }
+}
+
 
 // Render player info
 function renderPlayer() {
@@ -277,6 +310,14 @@ function nextSong() {
   } else {
     currentIndex = (currentIndex + 1) % playlist.length;
   }
+    // Khi đã tới cuối playlist
+  if (currentIndex === 0 && !isRepeat && !isShuffle) {
+    // Nếu bật tự động phát nhạc tương tự
+    if (autoNextSimilar) {
+      playSimilarSong();
+      return;
+    }
+  }
   playCurrent();
 }
 function prevSong() {
@@ -332,12 +373,29 @@ function createYTPlayer(videoId) {
 // Gộp logic chuyển bài và progress bar vào 1 hàm duy nhất!
 function onPlayerStateChange(event) {
   // Khi hết bài (state == 0)
+  // if (event.data === YT.PlayerState.ENDED) {
+  //   isPlaying = false;
+  //   renderPlayer();
+  //   stopProgressTracking();
+  //   if (isRepeat) {
+  //     playCurrent();
+  //   } else {
+  //     nextSong();
+  //   }
+  //   return;
+  // }
   if (event.data === YT.PlayerState.ENDED) {
     isPlaying = false;
     renderPlayer();
     stopProgressTracking();
     if (isRepeat) {
       playCurrent();
+    } else if (currentIndex === playlist.length - 1) {
+      if (autoNextSimilar) {
+        playSimilarSong();
+        return;
+      }
+      nextSong();
     } else {
       nextSong();
     }
@@ -543,4 +601,11 @@ aboutPopupClose.onclick = function() {
 // Đóng popup khi click ra ngoài nội dung
 aboutPopup.addEventListener('mousedown', function(e) {
   if (e.target === aboutPopup) aboutPopup.style.display = 'none';
+});
+
+let autoNextSimilar = false;
+
+const autoNextBox = document.getElementById('auto-next-similar');
+autoNextBox.addEventListener('change', function() {
+  autoNextSimilar = autoNextBox.checked;
 });

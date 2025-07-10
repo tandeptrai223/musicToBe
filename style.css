@@ -952,3 +952,9 @@ L
   0% { transform: translateY(-40px) scale(.94); opacity: 0; }
   100% { transform: none; opacity: 1; }
 }
+
+.playlist-header {
+  padding: 8px 18px;
+  font-size: 15px;
+  color: #3c3c3c;
+}
