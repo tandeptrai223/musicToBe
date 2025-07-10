@@ -14,8 +14,8 @@ let progressInterval = null;
 let userSeeking = false;
 
 const discImages = [
-  '/assets/img/1.png','/assets/img/2.png','/assets/img/3.png','/assets/img/4.png',
-  '/assets/img/5.png','/assets/img/6.png','/assets/img/7.png','/assets/img/8.png','/assets/img/9.png'
+  '/assets/img/11.png','/assets/img/22.png','/assets/img/33.png','/assets/img/44.png',
+  '/assets/img/55.png','/assets/img/66.png','/assets/img/77.png','/assets/img/88.png','/assets/img/99.png'
 ];
 let currentDisc = discImages[0];
 
