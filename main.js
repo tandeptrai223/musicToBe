@@ -798,7 +798,8 @@ window.playFavoriteSong = function(id) {
 window.removeFavoriteSong = function(id) {
   favoriteSongs = favoriteSongs.filter(s => s.id !== id);
   saveFavoriteSongsToFirebase();
-  // UI sẽ tự cập nhật nhờ listenFavoriteSongsRealtime
+  renderFavoriteList();
+  renderPlaylist();
 }
 
 
