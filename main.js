@@ -41,6 +41,8 @@ const ytAudioDiv = $("yt-audio");
 const progressBar = $("progress-bar");
 const currentTimeEl = $("current-time");
 const durationEl = $("duration");
+const FvList = $("FV-list");
+const fvBtn = $("favorite-popup-btn");
 
 const toggleBtn = $("toggle-transparent-btn");
 const autoNextBox = $("auto-next-similar");
@@ -63,9 +65,20 @@ toggleBtn.addEventListener('click', function() {
   toggleBtn.classList.toggle('active');
   [
     playerCard, chartFixed, chartPopup, playlistPopup, searchResults, chartPopupBtn, playlistPopupBtn,
-    searchInput, btnRepeat, btnPrev, btnPlay, btnNext, btnShuffle, loginBtn
+    searchInput, btnRepeat, btnPrev, btnPlay, btnNext, btnShuffle, loginBtn, fvBtn, FvList
   ].forEach(el => el && el.classList.toggle('transparent-bg', transparentModeOn));
   document.querySelectorAll('.chart-item,.song-search-item').forEach(item => item.classList.toggle('transparent-bg', transparentModeOn));
+  const favPopup = document.getElementById('favorite-popup-btn');
+  const FvLlist = document.getElementById('FV-list');
+  if (favPopup) favPopup.classList.toggle('transparent-bg', transparentModeOn);
+//   if (FvLlist) FvLlist.classList.toggle('transparent-bg', transparentModeOn);
+//   const favPopupContainer = document.getElementById('favorite-popup');
+// if (favPopupContainer) favPopupContainer.classList.toggle('transparent-bg', transparentModeOn);
+
+  // Với danh sách bài hát yêu thích:
+  document.querySelectorAll('.favorite-song').forEach(item =>
+    item.classList.toggle('transparent-bg', transparentModeOn)
+  );
   renderPlaylist();
 });
 
@@ -682,6 +695,7 @@ window.toggleFavorite = function(e, id) {
 function renderFavoriteBtn() {
   let favBtn = document.getElementById('favorite-popup-btn');
   if (!favBtn) {
+
     favBtn = document.createElement('button');
     favBtn.id = 'favorite-popup-btn';
     favBtn.textContent = '❤️ Bài hát yêu thích';
@@ -699,7 +713,7 @@ function showFavoritePopup() {
     popup.id = 'favorite-popup';
     popup.className = 'popup-bg';
     popup.innerHTML = `
-      <div class="popup-content">
+      <div id="FV-list" class="popup-content">
         <h2>❤️ Bài hát yêu thích</h2>
         <div id="favorite-list"></div>
         <button id="favorite-close">❌</button>
@@ -725,6 +739,8 @@ function renderFavoriteList() {
   favoriteSongs.forEach((song, idx) => {
     const div = document.createElement('div');
     div.className = 'favorite-songs';
+    if (transparentModeOn) div.classList.add('transparent-bg');
+
 
     // Thumbnail
     const thumbDiv = document.createElement('div');
