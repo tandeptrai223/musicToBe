@@ -185,7 +185,7 @@ body {
   letter-spacing: 1px;
 }
 
-.playlist-track {
+.playlist-track, .favorite-songs {
   display: flex;
   align-items: center;
   background: #fff;
@@ -197,6 +197,7 @@ body {
   cursor: pointer;
   border-left: 6px solid transparent;
   transition: background .18s, border .2s;
+  max-width: 500px;
 }
 .playlist-track.active {
   background: #e53935;
@@ -350,7 +351,8 @@ L
   margin-top: 1.5px;
   font-weight: 500;
 }
-.chart-item button {
+.chart-item button,
+.favorite-songs button {
   background: #e53935;
   color: #fff;
   border: none;
@@ -400,7 +402,8 @@ L
 .chart-fixed,
 #chart-list-scroll,
 .playlist-fixed,
-#play-list-scroll {
+#play-list-scroll,
+.popup-content {
   scrollbar-width: thin;
   scrollbar-color: #e53935 #ffeaea;
 }
@@ -550,6 +553,7 @@ L
     align-items: flex-start;
     gap: 8px;
     padding: 7px 0;
+    
   }
   .playlist-info {
     font-size: 0.95rem;
@@ -623,6 +627,8 @@ L
   z-index: 1200;
   gap: 8px;
   transition: box-shadow 0.15s, background 0.15s;
+  min-width: 172px;
+  justify-content: center;
 }
 .chart-popup-btn:hover {
   background: #ffeaea;
@@ -703,6 +709,8 @@ L
   z-index: 1200;
   gap: 8px;
   transition: box-shadow 0.15s, background 0.15s;
+  min-width: 172px;
+  justify-content: center;
 }
 .playlist-popup-btn:hover {
   background: #f4f0ff;
@@ -1127,9 +1135,46 @@ L
   position: fixed; top:0;left:0;width:100vw;height:100vh;
   background:rgba(0,0,0,.5); display:flex;align-items:center;justify-content:center;z-index:9999;
 }
+
 .popup-content {
   background:#fff;padding:20px;border-radius:8px;min-width:300px;
+  position: relative;
 }
 .favorite-btn {
   background:none;border:none;font-size:20px;margin-left:10px;cursor:pointer;
+}
+
+.favorite-btn.favorited {
+  color: red;
+}
+
+#favorite-popup-btn{
+  position: fixed;
+  bottom: 22px;
+  left: 242px;
+  background: #fff;
+  color: #e53935;
+  border-radius: 22px;
+  box-shadow: 0 2px 12px rgba(229, 57, 53, 0.12);
+  padding: 10px 22px 10px 17px;
+  display: flex !important;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  z-index: 1200;
+  gap: 8px;
+  transition: box-shadow 0.15s, background 0.15s;
+  min-width: 172px;
+  justify-content: center;
+  border: none;
+}
+
+button#favorite-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
 }

@@ -507,7 +507,8 @@ const firebaseConfig = {
   storageBucket: "nhaccuayou-23fb1.firebasestorage.app",
   messagingSenderId: "724049458431",
   appId: "1:724049458431:web:6514ded94761649aca88ca",
-  measurementId: "G-9G4J6XC4GV"
+  measurementId: "G-9G4J6XC4GV",
+  databaseURL: "https://nhaccuayou-23fb1-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 
 // 1. Khởi tạo Firebase
@@ -595,12 +596,16 @@ firebase.auth().onAuthStateChanged(function(user) {
     loginBtn.textContent = user.displayName + " 📴"; // Hiển thị tên người dùng
     loginBtn.onclick = showLogoutConfirm;
     loginBtn.classList.add('logged-in');
-    currentUser = user.uid;
-    // loadFavoriteSongsFromFirebase();
-    // listenFavoriteSongsRealtime();
-    // renderFavoriteBtn();
-    listenFavoriteSongsRealtime();
+    currentUser = user;
+
     renderFavoriteBtn();
+    db.ref(getFavKey()).once('value').then(snapshot => {
+      favoriteSongs = snapshot.val() || [];
+      renderPlaylist();
+      renderFavoriteList();
+      // Sau khi có dữ liệu, gắn listener realtime
+      listenFavoriteSongsRealtime();
+    });
 
   } else {
     loginBtn.textContent = "Đăng nhập với Google";
@@ -625,7 +630,6 @@ function saveFavoriteSongsToFirebase() {
 }
 
 // ==== Thêm nút tim vào mỗi bài hát ====
-// Thay đổi các hàm render playlist, chart, search ... ví dụ:
 function renderPlaylist() {
   playlistDiv.innerHTML = "";
   playlist.forEach((song, idx) => {
@@ -652,6 +656,9 @@ function renderPlaylist() {
 // ==== Hàm xử lý nút tim ====
 window.toggleFavorite = function(e, id) {
   e.stopPropagation();
+    const buttonFv = event.currentTarget;
+    buttonFv.classList.toggle('favorited');
+    buttonFv.textContent = buttonFv.classList.contains('favorited') ? '❤️' : '🤍';
   if (!currentUser) {
     alert("Bạn cần đăng nhập để lưu bài yêu thích!");
     return;
@@ -679,10 +686,6 @@ function renderFavoriteBtn() {
     favBtn.id = 'favorite-popup-btn';
     favBtn.textContent = '❤️ Bài hát yêu thích';
     favBtn.onclick = showFavoritePopup;
-    favBtn.style.position = 'fixed';
-    favBtn.style.top = '20px';
-    favBtn.style.right = '20px';
-    favBtn.style.zIndex = '1000';
     document.body.appendChild(favBtn);
   }
   favBtn.style.display = currentUser ? 'block' : 'none';
@@ -697,9 +700,9 @@ function showFavoritePopup() {
     popup.className = 'popup-bg';
     popup.innerHTML = `
       <div class="popup-content">
-        <h2>Bài hát yêu thích</h2>
+        <h2>❤️ Bài hát yêu thích</h2>
         <div id="favorite-list"></div>
-        <button id="favorite-close">Đóng</button>
+        <button id="favorite-close">❌</button>
       </div>
     `;
     document.body.appendChild(popup);
@@ -708,17 +711,76 @@ function showFavoritePopup() {
   renderFavoriteList();
   popup.style.display = 'flex';
 }
+
+
 function renderFavoriteList() {
   const favList = document.getElementById('favorite-list');
-  favList.innerHTML = favoriteSongs.length
-    ? favoriteSongs.map(song => `<div>
-      <img src="${song.thumb}" width="40" />
-      <span>${song.title}</span> - <span>${song.channel}</span>
-      <button onclick="playFavoriteSong('${song.id}')">Phát</button>
-      <button onclick="removeFavoriteSong('${song.id}')">Xóa</button>
-    </div>`).join('')
-    : "<div>Chưa có bài nào yêu thích.</div>";
+  favList.innerHTML = '';
+
+  if (favoriteSongs.length === 0) {
+    favList.innerHTML = '<div>Chưa có bài nào yêu thích.</div>';
+    return;
+  }
+
+  favoriteSongs.forEach((song, idx) => {
+    const div = document.createElement('div');
+    div.className = 'favorite-songs';
+
+    // Thumbnail
+    const thumbDiv = document.createElement('div');
+    thumbDiv.className = 'playlist-thumb';
+    const img = document.createElement('img');
+    img.src = song.thumb;
+    thumbDiv.appendChild(img);
+
+    // Info
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'playlist-info';
+
+    const titleDiv = document.createElement('div');
+    titleDiv.className = 'playlist-title';
+    titleDiv.textContent = song.title;
+
+    const channelDiv = document.createElement('div');
+    channelDiv.className = 'playlist-channel';
+    channelDiv.textContent = song.channel;
+
+    infoDiv.appendChild(titleDiv);
+    infoDiv.appendChild(channelDiv);
+
+    // Add to playlist
+    const addBtn = document.createElement('button');
+    addBtn.className = 'playlist-menu';
+    addBtn.textContent = '✚';
+    addBtn.onclick = (e) => {
+      e.stopPropagation();
+      addToPlaylist({
+        id: song.id,
+        title: song.title,
+        channel: song.channel,
+        thumb: song.thumb
+      });
+    };
+
+    // Remove from favorites
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'playlist-menu';
+    removeBtn.textContent = '✖';
+    removeBtn.onclick = (e) => {
+      e.stopPropagation();
+      removeFavoriteSong(song.id);
+    };
+
+    // Gắn các thành phần vào div chính
+    div.appendChild(thumbDiv);
+    div.appendChild(infoDiv);
+    div.appendChild(addBtn);
+    div.appendChild(removeBtn);
+
+    favList.appendChild(div);
+  });
 }
+
 window.playFavoriteSong = function(id) {
   const idx = playlist.findIndex(s => s.id === id);
   if (idx !== -1) {
