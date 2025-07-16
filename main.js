@@ -63,7 +63,7 @@ toggleBtn.addEventListener('click', function() {
   toggleBtn.classList.toggle('active');
   [
     playerCard, chartFixed, chartPopup, playlistPopup, searchResults, chartPopupBtn, playlistPopupBtn,
-    searchInput, btnRepeat, btnPrev, btnPlay, btnNext, btnShuffle
+    searchInput, btnRepeat, btnPrev, btnPlay, btnNext, btnShuffle, loginBtn
   ].forEach(el => el && el.classList.toggle('transparent-bg', transparentModeOn));
   document.querySelectorAll('.chart-item,.song-search-item').forEach(item => item.classList.toggle('transparent-bg', transparentModeOn));
   renderPlaylist();
@@ -512,6 +512,17 @@ const firebaseConfig = {
 
 // 1. Khởi tạo Firebase
 firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// ==== Quản lý user và danh sách yêu thích ====
+let currentUser = null;
+let favoriteSongs = [];
+
+function getFavKey() {
+  return currentUser ? 'favorites/' + currentUser.uid : null;
+}
+
+const loginBtn = document.getElementById('login-btn');
 
 // 2. Đăng nhập với Google
 function loginWithGoogle() {
@@ -530,6 +541,47 @@ function loginWithGoogle() {
 }
 
 // 3. Đăng xuất
+
+function showLogoutConfirm() {
+  // Xóa popup cũ nếu có
+  const old = document.getElementById('logout-confirm-popup');
+  if (old) old.remove();
+
+  // Tạo popup mới
+  const div = document.createElement('div');
+  div.id = 'logout-confirm-popup';
+  div.style.position = 'fixed';
+  div.style.top = '0';
+  div.style.left = '0';
+  div.style.width = '100vw';
+  div.style.height = '100vh';
+  div.style.background = 'rgba(0,0,0,0.5)';
+  div.style.display = 'flex';
+  div.style.justifyContent = 'center';
+  div.style.alignItems = 'center';
+  div.style.zIndex = '9999';
+
+  div.innerHTML = `
+    <div style="background:#fff;padding:24px 32px;border-radius:8px;box-shadow:0 8px 32px #0002;min-width:280px;text-align:center;">
+      <h3>Bạn có chắc muốn đăng xuất?</h3>
+      <div style="margin-top:18px;">
+        <button id="confirm-logout-yes" style="margin-right:16px;padding:6px 24px;">Có</button>
+        <button id="confirm-logout-no" style="padding:6px 24px;">Không</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(div);
+
+  document.getElementById('confirm-logout-yes').onclick = function() {
+    div.remove();
+    firebase.auth().signOut();
+  };
+  document.getElementById('confirm-logout-no').onclick = function() {
+    div.remove();
+  };
+}
+
 function logout() {
   firebase.auth().signOut().then(() => {
     alert("Đã đăng xuất!");
@@ -540,14 +592,153 @@ function logout() {
 // 4. Theo dõi trạng thái đăng nhập
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
-    // Đã đăng nhập
-    // user.uid, user.email, user.displayName, user.photoURL
-    // Cập nhật UI giao diện, hiển thị tính năng yêu thích...
+    loginBtn.textContent = user.displayName + " 📴"; // Hiển thị tên người dùng
+    loginBtn.onclick = showLogoutConfirm;
+    loginBtn.classList.add('logged-in');
+    currentUser = user.uid;
+    // loadFavoriteSongsFromFirebase();
+    // listenFavoriteSongsRealtime();
+    // renderFavoriteBtn();
+    listenFavoriteSongsRealtime();
+    renderFavoriteBtn();
+
   } else {
-    // Chưa đăng nhập
-    // Ẩn các tính năng yêu cầu đăng nhập
+    loginBtn.textContent = "Đăng nhập với Google";
+    loginBtn.onclick = loginWithGoogle;
+    loginBtn.classList.remove('logged-in');
+    currentUser = null;
+    favoriteSongs = [];
+    renderFavoriteBtn();
   }
 });
+
+function listenFavoriteSongsRealtime() {
+  db.ref(getFavKey()).on('value', snapshot => {
+    favoriteSongs = snapshot.val() || [];
+    renderFavoriteList();
+    renderPlaylist(); // gọi lại nếu muốn cập nhật giao diện tim
+  });
+}
+
+function saveFavoriteSongsToFirebase() {
+  db.ref(getFavKey()).set(favoriteSongs);
+}
+
+// ==== Thêm nút tim vào mỗi bài hát ====
+// Thay đổi các hàm render playlist, chart, search ... ví dụ:
+function renderPlaylist() {
+  playlistDiv.innerHTML = "";
+  playlist.forEach((song, idx) => {
+    const isFav = favoriteSongs.some(s => s.id === song.id);
+    const div = document.createElement("div");
+    div.className = "playlist-track" + (currentIndex === idx && isPlaying ? " active" : "");
+    div.onclick = () => {
+      currentIndex = idx;
+      playCurrent();
+    };
+    div.innerHTML = `
+      <div class="playlist-thumb"><img src="${song.thumb}"></div>
+      <div class="playlist-info">
+        <div class="playlist-title">${song.title}</div>
+        <div class="playlist-channel">${song.channel}</div>
+      </div>
+      <button class="favorite-btn" onclick="toggleFavorite(event, '${song.id}')">${isFav ? "❤️" : "🤍"}</button>
+      <button class="playlist-menu" onclick="removeFromPlaylist(event,${idx})">❌</button>
+    `;
+    playlistDiv.appendChild(div);
+  });
+}
+
+// ==== Hàm xử lý nút tim ====
+window.toggleFavorite = function(e, id) {
+  e.stopPropagation();
+  if (!currentUser) {
+    alert("Bạn cần đăng nhập để lưu bài yêu thích!");
+    return;
+  }
+  // Tìm bài hát
+  const song =
+    playlist.find(s => s.id === id)
+    || favoriteSongs.find(s => s.id === id);
+  if (!song) return;
+  const idx = favoriteSongs.findIndex(s => s.id === id);
+  if (idx !== -1) {
+    favoriteSongs.splice(idx, 1);
+  } else {
+    favoriteSongs.push(song);
+  }
+  saveFavoriteSongsToFirebase();
+  // UI sẽ tự cập nhật nhờ listenFavoriteSongsRealtime
+}
+
+// ==== Nút bật/tắt popup danh sách yêu thích ====
+function renderFavoriteBtn() {
+  let favBtn = document.getElementById('favorite-popup-btn');
+  if (!favBtn) {
+    favBtn = document.createElement('button');
+    favBtn.id = 'favorite-popup-btn';
+    favBtn.textContent = '❤️ Bài hát yêu thích';
+    favBtn.onclick = showFavoritePopup;
+    favBtn.style.position = 'fixed';
+    favBtn.style.top = '20px';
+    favBtn.style.right = '20px';
+    favBtn.style.zIndex = '1000';
+    document.body.appendChild(favBtn);
+  }
+  favBtn.style.display = currentUser ? 'block' : 'none';
+}
+
+// ==== Popup danh sách bài hát yêu thích ====
+function showFavoritePopup() {
+  let popup = document.getElementById('favorite-popup');
+  if (!popup) {
+    popup = document.createElement('div');
+    popup.id = 'favorite-popup';
+    popup.className = 'popup-bg';
+    popup.innerHTML = `
+      <div class="popup-content">
+        <h2>Bài hát yêu thích</h2>
+        <div id="favorite-list"></div>
+        <button id="favorite-close">Đóng</button>
+      </div>
+    `;
+    document.body.appendChild(popup);
+    document.getElementById('favorite-close').onclick = () => popup.remove();
+  }
+  renderFavoriteList();
+  popup.style.display = 'flex';
+}
+function renderFavoriteList() {
+  const favList = document.getElementById('favorite-list');
+  favList.innerHTML = favoriteSongs.length
+    ? favoriteSongs.map(song => `<div>
+      <img src="${song.thumb}" width="40" />
+      <span>${song.title}</span> - <span>${song.channel}</span>
+      <button onclick="playFavoriteSong('${song.id}')">Phát</button>
+      <button onclick="removeFavoriteSong('${song.id}')">Xóa</button>
+    </div>`).join('')
+    : "<div>Chưa có bài nào yêu thích.</div>";
+}
+window.playFavoriteSong = function(id) {
+  const idx = playlist.findIndex(s => s.id === id);
+  if (idx !== -1) {
+    currentIndex = idx;
+    playCurrent();
+  } else {
+    const song = favoriteSongs.find(s => s.id === id);
+    if (song) {
+      addToPlaylist(song);
+      currentIndex = playlist.length - 1;
+      playCurrent();
+    }
+  }
+}
+window.removeFavoriteSong = function(id) {
+  favoriteSongs = favoriteSongs.filter(s => s.id !== id);
+  saveFavoriteSongsToFirebase();
+  // UI sẽ tự cập nhật nhờ listenFavoriteSongsRealtime
+}
+
 
 // ====== INITIAL RENDER =====
 renderPlayer();

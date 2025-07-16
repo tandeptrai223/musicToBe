@@ -1122,3 +1122,14 @@ L
 .login:active {
   opacity: .5;
 }
+
+.popup-bg {
+  position: fixed; top:0;left:0;width:100vw;height:100vh;
+  background:rgba(0,0,0,.5); display:flex;align-items:center;justify-content:center;z-index:9999;
+}
+.popup-content {
+  background:#fff;padding:20px;border-radius:8px;min-width:300px;
+}
+.favorite-btn {
+  background:none;border:none;font-size:20px;margin-left:10px;cursor:pointer;
+}

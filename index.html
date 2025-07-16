@@ -12,6 +12,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <!-- Firebase Auth -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
   <div class="main-bg"></div>
@@ -39,8 +40,7 @@
   </div>
   </div>
 
-  <button class="login" onclick="loginWithGoogle()">Đăng nhập với Google</button>
-  <button onclick="logout()">Đăng xuất</button>
+  <button class="login" id="login-btn" onclick="loginWithGoogle()">Đăng nhập với Google</button>
 
   <div class="title-ios">
     ᓚᘏᗢ iOS 26
