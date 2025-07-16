@@ -858,8 +858,8 @@ L
 
 /* Nút cần gạt nhỏ góc phải */
 .toggle-transparent-btn {
-  position: fixed;
-  top: 20px;
+  position: absolute;
+  top: 80px;
   right: 30px;
   width: 48px;
   height: 26px;
@@ -874,8 +874,8 @@ L
 }
 
 .title-ios{
-  position: fixed;
-  top: 20px;
+  position: absolute;
+  top: 80px;
   right: 85px;
   color: white;
 }
@@ -1081,4 +1081,44 @@ L
   color: red;
   font-style: italic;
   font-weight: bold;
+}
+
+.login {
+  z-index: 100;
+  position: absolute;
+  right: 30px;
+  top: 20px;
+  background: #FF4742;
+  border: 1px solid #FF4742;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: inline-block;
+  font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 16px;
+  min-height: 40px;
+  outline: 0;
+  padding: 12px 14px;
+  text-align: center;
+  text-rendering: geometricprecision;
+  text-transform: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+}
+
+.login:hover,
+.login:active {
+  background-color: initial;
+  background-position: 0 0;
+  color: #FF4742;
+}
+
+.login:active {
+  opacity: .5;
 }

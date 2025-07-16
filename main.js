@@ -499,6 +499,56 @@ function updateDocumentTitle() {
   }
 }
 
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCAbmAxpb5nIpW9WTiHMdVW41pA6vAH-gA",
+  authDomain: "nhaccuayou-23fb1.firebaseapp.com",
+  projectId: "nhaccuayou-23fb1",
+  storageBucket: "nhaccuayou-23fb1.firebasestorage.app",
+  messagingSenderId: "724049458431",
+  appId: "1:724049458431:web:6514ded94761649aca88ca",
+  measurementId: "G-9G4J6XC4GV"
+};
+
+// 1. Khởi tạo Firebase
+firebase.initializeApp(firebaseConfig);
+
+// 2. Đăng nhập với Google
+function loginWithGoogle() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  firebase.auth().signInWithPopup(provider)
+    .then(result => {
+      // Thành công!
+      const user = result.user;
+      alert("Đăng nhập thành công: " + user.displayName);
+      // Lưu user info, cập nhật UI...
+      // user.uid, user.email, user.photoURL, user.displayName
+    })
+    .catch(error => {
+      alert("Đăng nhập thất bại: " + error.message);
+    });
+}
+
+// 3. Đăng xuất
+function logout() {
+  firebase.auth().signOut().then(() => {
+    alert("Đã đăng xuất!");
+    // Cập nhật lại giao diện
+  });
+}
+
+// 4. Theo dõi trạng thái đăng nhập
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // Đã đăng nhập
+    // user.uid, user.email, user.displayName, user.photoURL
+    // Cập nhật UI giao diện, hiển thị tính năng yêu thích...
+  } else {
+    // Chưa đăng nhập
+    // Ẩn các tính năng yêu cầu đăng nhập
+  }
+});
+
 // ====== INITIAL RENDER =====
 renderPlayer();
 renderPlaylist();
